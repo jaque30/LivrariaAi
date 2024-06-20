@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Livraria Ai",
-    "slug": "Livraria Ai",
+    "name": "ViajaAi",
+    "slug": "ViajaAi",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,18 +16,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive_icon.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.jaqueline_ads.ViajaAi"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "145c06e7-1d31-4c95-b033-7a47300a1728"
-      }
     }
   }
 }
