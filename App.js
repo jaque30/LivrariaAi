@@ -7,26 +7,31 @@ import { MaterialIcons } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 
 const statusBarHeight = StatusBar.currentHeight;
-const KEY_GPT = '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';
+<<<<<<< HEAD
+
+const KEY_GPT = '';
+>>>>>>> 40463962 (AI)
+=======
+const KEY_GPT = '';
+>>>>>>> 549bbd52 (Revert "AI")
 
 export default function App() {
-
-  const [city, setCity] = useState("");
-  const [days, setDays] = useState(3);
+  const [genero, setGenero] = useState("");
+  const [quantidade, setQuantidade] = useState(3); // Inicializa com 3 livros
   const [loading, setLoading] = useState(false);
-  const [travel, setTravel] = useState("")
+  const [catalogo, setCatalogo] = useState(""); // Estado para o catálogo de livros
 
   async function handleGenerate() {
-    if (city === "") {
-      Alert.alert("Atenção", "Preencha o nome da cidade!")
+    if (genero === "") {
+      Alert.alert("Atenção", "Preencha o nome do gênero escolhido!");
       return;
     }
 
-    setTravel("")
+    setCatalogo("");
     setLoading(true);
     Keyboard.dismiss();
 
-    const prompt = `Crie um roteiro para uma viagem de exatos ${days.toFixed(0)} dias na cidade de ${city}, busque por lugares turisticos, lugares mais visitados, seja preciso nos dias de estadia fornecidos e limite o roteiro apenas na cidade fornecida. Forneça apenas em tópicos com nome do local onde ir em cada dia.`
+    const prompt = `Crie um catálogo de ${quantidade.toFixed(0)} livros do gênero ${genero}. Para cada livro, inclua o título, autor, data de publicação e uma breve sinopse.`;
 
     fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -42,67 +47,67 @@ export default function App() {
             content: prompt
           }
         ],
-        temperature: 0.20,
-        max_tokens: 500,
+        temperature: 0.7, // Ajuste a temperatura para variar a criatividade da resposta
+        max_tokens: 1000, // Ajuste o número máximo de tokens para controlar o tamanho da resposta
         top_p: 1,
       })
     })
       .then(response => response.json())
       .then((data) => {
         console.log(data.choices[0].message.content);
-        setTravel(data.choices[0].message.content)
+        setCatalogo(data.choices[0].message.content);
       })
       .catch((error) => {
         console.log(error);
       })
       .finally(() => {
         setLoading(false);
-      })
-
+      });
   }
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" translucent={true} backgroundColor="#F1F1F1" />
-      <Text style={styles.heading}>Viaja AI</Text>
+      <Text style={styles.heading}>Livraria AI</Text>
 
       <View style={styles.form}>
-        <Text style={styles.label}>Cidade destino</Text>
+        <Text style={styles.label}>Gênero escolhido</Text>
         <TextInput
-          placeholder="Ex: Suzano, SP"
+          placeholder="Ex: Fantasia, Romance, etc."
           style={styles.input}
-          value={city}
-          onChangeText={(text) => setCity(text)}
+          value={genero}
+          onChangeText={(text) => setGenero(text)}
         />
 
-        <Text style={styles.label}>Tempo de estadia: <Text style={styles.days}> {days.toFixed(0)} </Text> dias</Text>
+        <Text style={styles.label}>Quantidade de livros: <Text style={styles.slider}> {quantidade.toFixed(0)} </Text> livros</Text>
         <Slider
+          style={styles.slider} // Adicione um estilo para o slider
           minimumValue={1}
-          maximumValue={7}
+          maximumValue={7} // Ajuste o valor máximo da quantidade de livros
           minimumTrackTintColor="#009688"
           maximumTrackTintColor="#000000"
-          value={days}
-          onValueChange={(value) => setDays(value)}
+          value={quantidade}
+          onValueChange={(value) => setQuantidade(value)}
         />
       </View>
 
       <Pressable style={styles.button} onPress={handleGenerate}>
-        <Text style={styles.buttonText}>Gerar roteiro</Text>
-        <MaterialIcons name="travel-explore" size={24} color="#FFF" />
+        <Text style={styles.buttonText}>Iniciar busca</Text>
+        <MaterialIcons name="search" size={24} color="#FFF" />
       </Pressable>
 
       <ScrollView contentContainerStyle={{ paddingBottom: 24, marginTop: 4, }} style={styles.containerScroll} showsVerticalScrollIndicator={false} >
         {loading && (
           <View style={styles.content}>
-            <Text style={styles.title}>Carregando roteiro...</Text>
+            <Text style={styles.title}>Carregando catálogo...</Text>
             <ActivityIndicator color="#000" size="large" />
           </View>
         )}
 
-        {travel && (
+        {catalogo && (
           <View style={styles.content}>
-            <Text style={styles.title}>Roteiro da viagem 👇</Text>
-            <Text style={{ lineHeight: 24, }}>{travel}</Text>
+            <Text style={styles.title}>Livros encontrados:</Text>
+            <Text style={{ lineHeight: 24, }}>{catalogo}</Text>
           </View>
         )}
       </ScrollView>
@@ -114,7 +119,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f1f1f1',
+    backgroundColor: '#F5F1EF',
     alignItems: 'center',
     paddingTop: 20,
   },
@@ -144,11 +149,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 16,
   },
-  days: {
-    backgroundColor: '#F1f1f1'
-  },
   button: {
-    backgroundColor: '#FF5656',
+    backgroundColor: 'black',
     width: '90%',
     borderRadius: 8,
     flexDirection: 'row',
@@ -159,7 +161,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
-    color: '#FFF',
+    color: '#fff',
     fontWeight: 'bold'
   },
   content: {
@@ -178,5 +180,10 @@ const styles = StyleSheet.create({
   containerScroll: {
     width: '90%',
     marginTop: 8,
+  },
+  slider: {
+    marginBottom: 20,
+    height: 40, // Define a altura do slider
+    backgroundColor: '#f1f1f1' // Adicione margem inferior ao slider
   }
 });
